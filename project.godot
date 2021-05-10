@@ -11,7 +11,17 @@ config_version=4
 [application]
 
 config/name="2048 Cpp"
+run/main_scene="res://Scenes/Game.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=576
+window/size/height=1024
+window/size/test_width=518
+window/size/test_height=921
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [physics]
 
@@ -19,5 +29,4 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-quality/driver/driver_name="GLES3"
 environment/default_environment="res://default_env.tres"

@@ -1,0 +1,14 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true
+
+[entry]
+
+X11.64="res://Scripts/Bin/X11/lib2048-cpp.linux.release.64.so"
+
+[dependencies]
+
+X11.64=[  ]

@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.298039, 0.298039, 0.372549, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[node name="Tile" type="Panel"]
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 128, 128 )
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 128, 128 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
