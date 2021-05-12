@@ -81,24 +81,4 @@ void Board::create_num_tile_at_index(const MatrixIndex& index, int which_num)
     if (m_global != nullptr)
         new_num_tile->set_texture(m_global->m_number_textures[which_num]);
     
-    m_board_mat[index.row][index.col] = new_num_tile;
-
-    new_num_tile->set_position(
-        Object::cast_to<Panel>(m_bg_tiles_root->get_child(
-            index.row * m_board_size.y + index.col))
-            ->get_position());
-    m_num_tiles_root->add_child(new_num_tile);
-
-    return;
-}
-
-void Board::set_board_size(Vector2 __board_size)
-{
-    m_board_size = __board_size;
-    return;
-}
-
-Vector2 Board::get_board_size() const
-{
-    return m_board_size;
 }
