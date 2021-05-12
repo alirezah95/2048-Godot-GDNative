@@ -5,6 +5,7 @@
 #include <Node2D.hpp>
 #include <PackedScene.hpp>
 #include <vector>
+#include <InputEvent.hpp>
 
 using std::vector;
 
@@ -36,6 +37,8 @@ namespace godot
         void _init();
 
         void _ready();
+
+        void _input(const Ref<InputEvent> event);
 
         /* m_board_size setter and getter*/
         void set_board_size(Vector2 __board_size);

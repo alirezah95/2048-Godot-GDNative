@@ -9,6 +9,8 @@
 #include <ResourceLoader.hpp>
 #include <Texture.hpp>
 #include <TextureRect.hpp>
+#include <InputEventScreenTouch.hpp>
+#include <InputEventScreenDrag.hpp>
 
 using namespace godot;
 using std::vector;
@@ -16,6 +18,7 @@ using std::vector;
 void Board::_register_methods()
 {
     register_method("_ready", &Board::_ready);
+    register_method("_input", &Board::_input);
     register_method("set_board_size", &Board::set_board_size);
     register_method("get_board_size", &Board::get_board_size);
 
@@ -47,7 +50,8 @@ void Board::_ready()
         Godot::print("Null bg_tile_resource");
     } else {
         // Instancing background tiles.
-        m_tile_start_pos = get_node<Position2D>("TilesStartPos")->get_position();
+        m_tile_start_pos = get_node<Position2D>(
+            "TilesStartPos")->get_position();
 
         Vector2 tile_current_positino = m_tile_start_pos + Vector2(4, 4);
         for (int i = 0; i < 4; ++i) {
@@ -75,6 +79,17 @@ void Board::_ready()
     return;
 }
 
+void Board::set_board_size(Vector2 __board_size)
+{
+    m_board_size = __board_size;
+    return;
+}
+
+Vector2 Board::get_board_size() const
+{
+    return m_board_size;
+}
+
 void Board::create_num_tile_at_index(const MatrixIndex& index, int which_num)
 {
     auto new_num_tile = TextureRect::_new();
@@ -92,13 +107,10 @@ void Board::create_num_tile_at_index(const MatrixIndex& index, int which_num)
     return;
 }
 
-void Board::set_board_size(Vector2 __board_size)
+void Board::_input(const Ref<InputEvent> event)
 {
-    m_board_size = __board_size;
-    return;
-}
-
-Vector2 Board::get_board_size() const
-{
-    return m_board_size;
+    if (Object::cast_to<InputEventScreenTouch>(*event) != nullptr){
+        auto c_event = Object::cast_to<InputEventScreenTouch>(*event);
+        Godot::print(c_event->get_position());
+    }
 }

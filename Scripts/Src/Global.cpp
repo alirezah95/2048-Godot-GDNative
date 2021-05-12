@@ -16,7 +16,7 @@ namespace godot
 {
     class Global : public Node
     {
-        GODOT_CLASS(Global, Node);
+        GODOT_CLASS(Global, Node)
 
     private:
         ResourceLoader* m_loader;
