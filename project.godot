@@ -14,6 +14,10 @@ config/name="2048 Cpp"
 run/main_scene="res://Scenes/Game.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://Scripts/Global.gdns"
+
 [display]
 
 window/size/width=576

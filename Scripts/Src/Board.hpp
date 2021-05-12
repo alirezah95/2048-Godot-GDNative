@@ -13,6 +13,7 @@ namespace godot
     class PackedScene;
     class Panel;
     class MatrixIndex;
+    class Global;
     class Board : public Node2D
     {
         GODOT_CLASS(Board, Node2D);
@@ -24,9 +25,11 @@ namespace godot
         vector<vector<Object *>> m_board_mat;
         Node *m_bg_tiles_root;
         Node *m_num_tiles_root;
+        /* A reference to Global autoload in scene tree*/
+        Global* m_global;
 
     private:
-        void create_num_tile_at_index(const MatrixIndex &index);
+        void create_num_tile_at_index(const MatrixIndex &index, int which_num);
     public:
         static void _register_methods();
 

@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Board.hpp"
+#include "Global.cpp"
 
 /** GDNative Initialize **/
 extern "C" void GDN_EXPORT godot_gdnative_init(godot_gdnative_init_options *o) {
@@ -17,4 +18,5 @@ extern "C" void GDN_EXPORT godot_nativescript_init(void *handle) {
 
     godot::register_class<godot::Game>();
     godot::register_class<godot::Board>();
+    godot::register_class<godot::Global>();
 }

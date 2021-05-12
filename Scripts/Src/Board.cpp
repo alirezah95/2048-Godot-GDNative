@@ -1,4 +1,6 @@
 #include "Board.hpp"
+#include "MatrixIndex.cpp"
+#include "Global.cpp"
 
 #include <time.h>
 
@@ -8,9 +10,8 @@
 #include <Texture.hpp>
 #include <TextureRect.hpp>
 
-#include "MatrixIndex.cpp"
-
 using namespace godot;
+using std::vector;
 
 void Board::_register_methods()
 {
@@ -29,6 +30,14 @@ void Board::_init()
 
 void Board::_ready()
 {
+    /* Get Global autoload reference. */
+    m_global = Object::cast_to<Global>(get_node("/root/Global"));
+
+    m_board_mat.resize(m_board_size.y);
+    for (vector<Object*> &vec: m_board_mat) {
+        vec.resize(m_board_size.x);
+    }
+
     m_bg_tiles_root = get_node<Node>("BgTiles");
     m_num_tiles_root = get_node<Node>("NumTiles");
 
@@ -55,21 +64,24 @@ void Board::_ready()
 
         MatrixIndex first_num_tile_index;
         srand(time(nullptr));
-        first_num_tile_index.row = rand() % (int)m_board_size.y;
         srand(rand());
+        int rnd = rand();
+        first_num_tile_index.row = rnd % (int)m_board_size.y;
+        srand(rnd);
         first_num_tile_index.col = rand() % (int)m_board_size.x;
-        create_num_tile_at_index(first_num_tile_index);
+        create_num_tile_at_index(first_num_tile_index, 2);
     }
 
     return;
 }
 
-void Board::create_num_tile_at_index(const MatrixIndex& index)
+void Board::create_num_tile_at_index(const MatrixIndex& index, int which_num)
 {
     auto new_num_tile = TextureRect::_new();
-    new_num_tile->set_texture(
-        ResourceLoader::get_singleton()->load("res://Assets/Gfx/2 Tile.png"));
-    // m_board_mat[index.row][index.col] = new_num_tile;
+    if (m_global != nullptr)
+        new_num_tile->set_texture(m_global->m_number_textures[which_num]);
+    
+    m_board_mat[index.row][index.col] = new_num_tile;
 
     new_num_tile->set_position(
         Object::cast_to<Panel>(m_bg_tiles_root->get_child(
