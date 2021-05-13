@@ -43,6 +43,9 @@ namespace godot
 
         void queue_num_log_2_update(int _num_log_2);
 
+        /* Shows if item is queued for update so the nubmer is not correct now*/
+        bool is_queue_for_update();
+
         void update_texture(bool _with_animation = false);
 
         long get_number() const;

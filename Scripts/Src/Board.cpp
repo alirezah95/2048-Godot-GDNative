@@ -1,6 +1,7 @@
 #include "Board.hpp"
 #include "MatrixIndex.cpp"
 #include "Global.hpp"
+#include "Game.hpp"
 
 #include <time.h>
 
@@ -41,6 +42,7 @@ void Board::_init()
 void Board::_ready()
 {
     m_to_idle_delay = get_node<Timer>("ToIdleTmr");
+    m_game = Object::cast_to<Game>(get_parent());
 
     Global::g->m_curr_board = this;
     m_rand_gen = Ref<RandomNumberGenerator>(RandomNumberGenerator::_new());
@@ -84,8 +86,8 @@ void Board::_ready()
             tile_current_positino.x = m_tile_start_pos.x + 3;
             tile_current_positino.y += 128 + 4;
         }
-        create_random_tile_with_num(0);
-        call_deferred("create_random_tile_with_num", 0);
+        create_random_tile_with_num(1);
+        call_deferred("create_random_tile_with_num", 1);
     }
 
     return;
@@ -223,7 +225,7 @@ void Board::change_state_to(BoardState __new_state)
         print_board_matrix();
         break;
     case BoardState::UPDATE_BOARD:
-        create_random_tile_with_num(0);
+        create_random_tile_with_num(1);
 
         for (auto &item: m_tiles_to_free)
             item->queue_free();
@@ -231,8 +233,10 @@ void Board::change_state_to(BoardState __new_state)
         if (m_tiles_to_update.size() == 0) {
             change_state_to(BoardState::IDLE);
         } else {
-            for (auto &item: m_tiles_to_update)
+            for (auto &item: m_tiles_to_update) {
                 item->update_texture(true);
+                m_game->increase_points_by(item->get_number());
+            }
             /* Starts a delay timer to reset board to idle */
             m_to_idle_delay->start();
         }
@@ -249,11 +253,14 @@ void Board::swipe_up()
         for (int row = 1; row < m_board_size.y; ++row) {
             if (m_board_mat[row][col] != nullptr) {
                 int move_row = row;
+                NumberTile *to_item;
                 while (move_row > 0) {
-                    if (m_board_mat[move_row - 1][col] == nullptr) {
+                    to_item = m_board_mat[move_row - 1][col];
+                    if (to_item == nullptr) {
                         move_row -= 1;
-                    } else if (m_board_mat[row][col]->get_number()
-                        == m_board_mat[move_row - 1][col]->get_number()) {
+                    } else if ((m_board_mat[row][col]->get_number()
+                            == to_item->get_number())
+                            && !to_item->is_queue_for_update()) {
                         move_row -= 1;
                         break;
                     } else
@@ -287,11 +294,14 @@ void Board::swipe_down()
         for (int row = m_board_size.y - 2; row >= 0; --row) {
             if (m_board_mat[row][col] != nullptr) {
                 int move_row = row;
+                NumberTile *to_item;
                 while (move_row < m_board_size.y - 1) {
-                    if (m_board_mat[move_row + 1][col] == nullptr) {
+                    to_item = m_board_mat[move_row + 1][col];
+                    if (to_item == nullptr) {
                         move_row += 1;
-                    } else if (m_board_mat[row][col]->get_number()
-                        == m_board_mat[move_row + 1][col]->get_number()) {
+                    } else if ((m_board_mat[row][col]->get_number()
+                            == to_item->get_number())
+                            && !to_item->is_queue_for_update()) {
                         move_row += 1;
                         break;
                     } else
@@ -325,11 +335,14 @@ void Board::swipe_right()
         for (int col = m_board_size.x - 2; col >= 0; --col) {
             if (m_board_mat[row][col] != nullptr) {
                 int move_col = col;
+                NumberTile *to_item;
                 while (move_col < m_board_size.x - 1) {
-                    if (m_board_mat[row][move_col + 1] == nullptr) {
+                    to_item = m_board_mat[row][move_col + 1];
+                    if (to_item == nullptr) {
                         move_col += 1;
-                    } else if (m_board_mat[row][col]->get_number()
-                        == m_board_mat[row][move_col + 1]->get_number()) {
+                    } else if ((m_board_mat[row][col]->get_number()
+                            == to_item->get_number())
+                            && !to_item->is_queue_for_update()) {
                         move_col += 1;
                         break;
                     } else
@@ -361,11 +374,14 @@ void Board::swipe_left()
         for (int col = 1; col < m_board_size.x; ++col) {
             if (m_board_mat[row][col] != nullptr) {
                 int move_col = col;
+                NumberTile *to_item;
                 while (move_col > 0) {
-                    if (m_board_mat[row][move_col - 1] == nullptr) {
+                    to_item = m_board_mat[row][move_col - 1];
+                    if (to_item == nullptr) {
                         move_col -= 1;
-                    } else if (m_board_mat[row][col]->get_number()
-                        == m_board_mat[row][move_col - 1]->get_number()) {
+                    } else if ((m_board_mat[row][col]->get_number()
+                            == to_item->get_number()
+                            && !to_item->is_queue_for_update())) {
                         move_col -= 1;
                         break;
                     } else

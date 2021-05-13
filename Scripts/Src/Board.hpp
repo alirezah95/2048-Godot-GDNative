@@ -19,6 +19,7 @@ namespace godot
     class MatrixIndex;
     class Global;
     class Timer;
+    class Game;
 
     /* Enum variable showing board stat */
     enum class BoardState: int
@@ -58,6 +59,8 @@ namespace godot
         Ref<RandomNumberGenerator> m_rand_gen;
         /* Delay time to change to Idle state reference */
         Timer *m_to_idle_delay;
+        /* A reference to current Game object (Board parent).*/
+        Game *m_game;
 
     private:
         void create_num_tile_at_index(const MatrixIndex &index, int which_num);

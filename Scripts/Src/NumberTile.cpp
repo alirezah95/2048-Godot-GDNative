@@ -65,10 +65,15 @@ namespace godot
         m_is_update_queued = true;
         return;
     }
+    
+    bool NumberTile::is_queue_for_update() 
+    {
+        return m_is_update_queued;
+    }
 
     void NumberTile::update_texture(bool _with_animation) 
     {
-        set_texture(Global::g->m_number_textures[m_num_log_2]);
+        set_texture(Global::g->m_number_textures[m_num_log_2 - 1]);
         if (_with_animation)
             m_update_anima->play("Update");
         
@@ -93,10 +98,10 @@ namespace godot
         m_target_indx = _to_index;
         m_target_pos = _target_pos;
 
-        Godot::print("Set item ({0}, {1}) to move to index ({2}, {3})",
-            m_index.row, m_index.col, m_target_indx.row, m_target_indx.col);
+        // Godot::print("Set item ({0}, {1}) to move to index ({2}, {3})",
+        //     m_index.row, m_index.col, m_target_indx.row, m_target_indx.col);
         
-        m_move_sp = (m_target_pos - get_position()) * 6;
+        m_move_sp = (m_target_pos - get_position()) * 8;
         set_process(true);
         return;
     }
