@@ -12,7 +12,7 @@ config_version=4
 
 config/name="2048 Cpp"
 run/main_scene="res://Scenes/Game.tscn"
-config/icon="res://icon.png"
+config/icon="res://Assets/Gfx/2048 Tile.png"
 
 [autoload]
 
@@ -24,6 +24,7 @@ window/size/width=576
 window/size/height=1024
 window/size/test_width=518
 window/size/test_height=921
+window/handheld/orientation="portrait"
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 

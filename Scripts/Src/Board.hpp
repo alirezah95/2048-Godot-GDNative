@@ -27,7 +27,6 @@ namespace godot
         IDLE,
         TOUCH,
         SWIP,
-        MOVE_ITEMS,
         UPDATE_BOARD
     };
 
@@ -36,7 +35,7 @@ namespace godot
         GODOT_CLASS(Board, Node2D);
 
     private:
-        const float c_DRAG_THRESHOLD = 64. * 64.;
+        const float c_DRAG_THRESHOLD = 32. * 32.;
         Ref<PackedScene> m_bg_tile_scn;
         Ref<PackedScene> m_num_tile_scn;
         Vector2 m_tile_start_pos;

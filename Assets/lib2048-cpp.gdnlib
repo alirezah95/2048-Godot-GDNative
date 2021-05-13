@@ -7,8 +7,12 @@ reloadable=true
 
 [entry]
 
+Android.armeabi-v7a="res://Scripts/Bin/Android/lib2048-cpp.android.release.armv7.so"
+Android.arm64-v8a="res://Scripts/Bin/Android/lib2048-cpp.android.release.arm64v8.so"
 X11.64="res://Scripts/Bin/X11/lib2048-cpp.linux.release.64.so"
 
 [dependencies]
 
+Android.armeabi-v7a=[  ]
+Android.arm64-v8a=[  ]
 X11.64=[  ]
