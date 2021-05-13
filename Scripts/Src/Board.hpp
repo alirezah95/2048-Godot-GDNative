@@ -18,6 +18,7 @@ namespace godot
     class Panel;
     class MatrixIndex;
     class Global;
+    class Timer;
 
     /* Enum variable showing board stat */
     enum class BoardState: int
@@ -55,7 +56,8 @@ namespace godot
         int m_touch_indx = -1;
         /* A RandomNumberGenerator object to generate random numbers */
         Ref<RandomNumberGenerator> m_rand_gen;
-        
+        /* Delay time to change to Idle state reference */
+        Timer *m_to_idle_delay;
 
     private:
         void create_num_tile_at_index(const MatrixIndex &index, int which_num);
@@ -84,6 +86,9 @@ namespace godot
         void create_random_tile_with_num(int which_num);
 
         void decrease_moving_tiles();
+
+        /* Method that is connected to timer used for resetting to idle state*/
+        void _on_ToIdleTmr_timeout();
     };
 }; // namespace godot
 

@@ -46,8 +46,9 @@ namespace godot
 
     void NumberTile::set_num_log_2(int _num_log_2, bool _with_animation)
     {
-        m_number = (long)pow(2, _num_log_2);
-        set_texture(Global::g->m_number_textures[_num_log_2]);
+        m_num_log_2 = _num_log_2;
+        m_number = (long)pow(2, m_num_log_2);
+        set_texture(Global::g->m_number_textures[m_num_log_2]);
         if (_with_animation)
             m_update_anima->play("Update");
         return;

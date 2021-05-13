@@ -11,6 +11,7 @@
 #include <TextureRect.hpp>
 #include <InputEventScreenTouch.hpp>
 #include <InputEventScreenDrag.hpp>
+#include <Timer.hpp>
 
 using namespace godot;
 using std::vector;
@@ -25,6 +26,7 @@ void Board::_register_methods()
     register_method("get_board_size", &Board::get_board_size);
     register_method("create_random_tile_with_num",
         &Board::create_random_tile_with_num);
+    register_method("_on_ToIdleTmr_timeout", &Board::_on_ToIdleTmr_timeout);
 
     return;
 }
@@ -38,6 +40,8 @@ void Board::_init()
 
 void Board::_ready()
 {
+    m_to_idle_delay = get_node<Timer>("ToIdleTmr");
+
     Global::g->m_curr_board = this;
     m_rand_gen = Ref<RandomNumberGenerator>(RandomNumberGenerator::_new());
 
@@ -211,8 +215,9 @@ void Board::change_state_to(BoardState __new_state)
             change_state_to(BoardState::IDLE);
         } else {
             for (auto &item: m_tiles_to_update)
-                item->set_num_log_2(item->get_num_log_2() * 2, true);
+                item->set_num_log_2(item->get_num_log_2() + 1, true);
             /* Starts a delay timer to reset board to idle */
+            m_to_idle_delay->start();
         }
         break;
     }
@@ -419,3 +424,9 @@ void Board::print_board_matrix()
     return;
 }
 
+
+void Board::_on_ToIdleTmr_timeout() 
+{
+    change_state_to(BoardState::IDLE);
+    return;
+}

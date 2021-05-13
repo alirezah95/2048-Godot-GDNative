@@ -44,3 +44,9 @@ custom_styles/panel = SubResource( 1 )
 [node name="BgTiles" type="Node2D" parent="."]
 
 [node name="NumTiles" type="Node2D" parent="."]
+
+[node name="ToIdleTmr" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+
+[connection signal="timeout" from="ToIdleTmr" to="." method="_on_ToIdleTmr_timeout"]
