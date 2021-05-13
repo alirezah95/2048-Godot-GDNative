@@ -37,6 +37,31 @@ namespace godot
             col = __other.col;
             return;
         }
+
+        MatrixIndex operator=(const MatrixIndex &__other)
+        {
+            row = __other.row;
+            col = __other.col;
+            return *this;
+        }
+
+        MatrixIndex operator=(const MatrixIndex &&__other)
+        {
+            row = __other.row;
+            col = __other.col;
+            return *this;
+        }
+
+        MatrixIndex operator-(const MatrixIndex &__other)
+        {
+            return MatrixIndex(row - __other.row, col - __other.col);
+        }
+
+        MatrixIndex operator+(const MatrixIndex &__other)
+        {
+            return MatrixIndex(row + __other.row, col + __other.col);
+        }
+
     };
 }
 

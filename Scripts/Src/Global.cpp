@@ -1,59 +1,39 @@
-#ifndef __GLOBAL_H__
-#define __GLOBAL_H__
+#include "Global.hpp"
 
-#include <Node.hpp>
-#include <Godot.hpp>
-#include <Texture.hpp>
-#include <ResourceLoader.hpp>
-#include <String.hpp>
-#include <array>
+using namespace godot;
 
 
-using std::array;
+Global* Global::g = nullptr;
 
 
-namespace godot
+void Global::_register_methods() 
 {
-    class Global : public Node
-    {
-        GODOT_CLASS(Global, Node)
+    register_method("_ready", &Global::_ready);
 
-    private:
-        ResourceLoader* m_loader;
-    
-    public:
-        array<Ref<Texture>, 16> m_number_textures;
+    return;
+}
 
-    public:
-        static void _register_methods()
-        {
-            register_method("_ready", &Global::_ready);
+void Global::_init()
+{
+}
 
-            return;
-        }
+void Global::_ready() 
+{
+    if (g == nullptr) {
+        g = this;
+    }
 
-        void _init() {};
+    m_loader = ResourceLoader::get_singleton();
 
-        void _ready()
-        {
-            m_loader = ResourceLoader::get_singleton();
+    String path = "res://Assets/Gfx/{0} Tile.png";
+    int texture_number = 2;
+    for (Ref<Texture> &ref_tex: m_number_textures){
+        ref_tex = Ref<Texture>(Object::cast_to<Texture>(*m_loader->load(
+            path.format(Array::make(
+                String::num_int64(texture_number))))));
+        texture_number *= 2;
+    }
 
-            String path = "res://Assets/Gfx/{0} Tile.png";
-            int texture_number = 2;
-            for (Ref<Texture> &ref_tex: m_number_textures){
-                ref_tex = Ref<Texture>(Object::cast_to<Texture>(*m_loader->load(
-                    path.format(Array::make(
-                        String::num_int64(texture_number))))));
-                texture_number *= 2;
-            }
+    return;
+}
 
-            return;
-        }
-
-    };
-    
-};
-
-
-
-#endif // __GLOBAL_H__
