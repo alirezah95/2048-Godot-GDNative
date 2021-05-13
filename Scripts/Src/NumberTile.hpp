@@ -25,7 +25,9 @@ namespace godot
         long m_number;
         /* Holds the log2 of m_number variable, to avoid calculations */
         uint8_t m_num_log_2;
-
+        /* Holds if an update texure/nubmer is queued to happen. */
+        bool m_is_update_queued = false;
+    
     public:
         static void _register_methods();
 
@@ -38,6 +40,10 @@ namespace godot
         void set_num_log_2(int _num_log_2, bool _with_animation = false);
 
         uint8_t get_num_log_2() const;
+
+        void queue_num_log_2_update(int _num_log_2);
+
+        void update_texture(bool _with_animation = false);
 
         long get_number() const;
 

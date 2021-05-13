@@ -122,12 +122,27 @@ void Board::create_random_tile_with_num(int which_num)
         return;
     }
 
-    MatrixIndex new_tile_indx;
+    /* When a new random tile is going to be generated, the board empty indexes
+     * must be found first and then a tile be generated at a random index which
+     * is empty
+     */
+    vector<MatrixIndex> empty_cells;
+    /* Reserve memory for performance sake. Maximum empty cells are 
+     * (m_board_size.x * m_board_size.y)
+    */
+    empty_cells.reserve(m_board_size.x * m_board_size.y);
+    for (int row = 0; row < m_board_size.x; ++row) {
+        for (int col = 0; col < m_board_size.y; ++col) {
+            if (m_board_mat[row][col] == nullptr) {
+                empty_cells.push_back(MatrixIndex(row, col));
+            }
+        }
+    }
+
     m_rand_gen->randomize();
-    new_tile_indx.row = m_rand_gen->randi() % (int)m_board_size.y;
-    m_rand_gen->randomize();
-    new_tile_indx.col = m_rand_gen->randi() % (int)m_board_size.x;
-    Godot::print("Create random tile at ({0}, {1})", new_tile_indx.row, new_tile_indx.col);
+    MatrixIndex new_tile_indx = 
+            empty_cells[m_rand_gen->randi() % empty_cells.size()];
+    // Godot::print("Create random tile at ({0}, {1})", new_tile_indx.row, new_tile_indx.col);
     create_num_tile_at_index(new_tile_indx, which_num);
 
     return;
@@ -208,6 +223,8 @@ void Board::change_state_to(BoardState __new_state)
         print_board_matrix();
         break;
     case BoardState::UPDATE_BOARD:
+        create_random_tile_with_num(0);
+
         for (auto &item: m_tiles_to_free)
             item->queue_free();
         
@@ -215,7 +232,7 @@ void Board::change_state_to(BoardState __new_state)
             change_state_to(BoardState::IDLE);
         } else {
             for (auto &item: m_tiles_to_update)
-                item->set_num_log_2(item->get_num_log_2() + 1, true);
+                item->update_texture(true);
             /* Starts a delay timer to reset board to idle */
             m_to_idle_delay->start();
         }
@@ -352,12 +369,12 @@ void Board::swipe_left()
                         move_col -= 1;
                         break;
                     } else
-                        continue;
+                        break;
                 } // end while
 
                 if (move_col == col) {
                     /* This item cannot move up. */
-                    break;
+                    continue;
                 } else {
                     m_moving_tiles += 1;
                     set_item_move_to_indx(MatrixIndex(row, col),
@@ -390,6 +407,8 @@ void Board::set_item_move_to_indx(const MatrixIndex &indx,
     } else if (to_item->get_number() == item->get_number()) {
         m_tiles_to_free.push_back(item);
         m_tiles_to_update.push_back(to_item);
+        to_item->queue_num_log_2_update(to_item->get_num_log_2() + 1);
+
     } /* Else item should not be moved */
 
     return;
@@ -397,6 +416,7 @@ void Board::set_item_move_to_indx(const MatrixIndex &indx,
 
 void Board::print_board_matrix() 
 {
+    return;
     String b = "";
     for (auto &vec: m_board_mat){
         for (int i = 0; i < vec.size(); i++) {

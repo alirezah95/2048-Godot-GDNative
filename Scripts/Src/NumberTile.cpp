@@ -48,15 +48,32 @@ namespace godot
     {
         m_num_log_2 = _num_log_2;
         m_number = (long)pow(2, m_num_log_2);
-        set_texture(Global::g->m_number_textures[m_num_log_2]);
-        if (_with_animation)
-            m_update_anima->play("Update");
+
+        update_texture();
         return;
     }
 
     uint8_t NumberTile::get_num_log_2() const
     {
         return m_num_log_2;
+    }
+
+    void NumberTile::queue_num_log_2_update(int _num_log_2)
+    {
+        m_num_log_2 = _num_log_2;
+        m_number = (long)pow(2, m_num_log_2);
+        m_is_update_queued = true;
+        return;
+    }
+
+    void NumberTile::update_texture(bool _with_animation) 
+    {
+        set_texture(Global::g->m_number_textures[m_num_log_2]);
+        if (_with_animation)
+            m_update_anima->play("Update");
+        
+        m_is_update_queued = false;
+        return;
     }
 
     long NumberTile::get_number() const
@@ -79,7 +96,7 @@ namespace godot
         Godot::print("Set item ({0}, {1}) to move to index ({2}, {3})",
             m_index.row, m_index.col, m_target_indx.row, m_target_indx.col);
         
-        m_move_sp = (m_target_pos - get_position()) * 4;
+        m_move_sp = (m_target_pos - get_position()) * 6;
         set_process(true);
         return;
     }
