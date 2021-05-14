@@ -86,10 +86,15 @@ namespace godot
         return m_number;
     }
 
-    void NumberTile::set_index(const MatrixIndex &_index)
+    void NumberTile::set_mat_index(const MatrixIndex &_index)
     {
         m_index = _index;
         return;
+    }
+
+    MatrixIndex NumberTile::get_mat_index() const
+    {
+        return m_index;
     }
 
     void NumberTile::move_to_index(const MatrixIndex &_to_index,

@@ -13,6 +13,7 @@
 #include <InputEventScreenTouch.hpp>
 #include <InputEventScreenDrag.hpp>
 #include <Timer.hpp>
+#include <SceneTree.hpp>
 
 using namespace godot;
 using std::vector;
@@ -66,6 +67,9 @@ void Board::_ready()
     m_num_tile_scn = ResourceLoader::get_singleton()->load(
         "res://Scenes/NumberTile.tscn", "PackedScene"
     );
+    m_player_lost_scn = ResourceLoader::get_singleton()->load(
+        "res://Scenes/PlayerLost.tscn", "PackedScene"
+    );
     
     if (m_bg_tile_scn.is_null()) {
         Godot::print("Null bg_tile_resource");
@@ -88,6 +92,7 @@ void Board::_ready()
         }
         create_random_tile_with_num(1);
         call_deferred("create_random_tile_with_num", 1);
+        
     }
 
     return;
@@ -161,7 +166,7 @@ void Board::create_num_tile_at_index(const MatrixIndex& index, int which_num)
             index.row * m_board_size.y + index.col))
             ->get_position());
     new_num_tile->set_num_log_2(which_num);
-    new_num_tile->set_index(index);
+    new_num_tile->set_mat_index(index);
 
     m_num_tiles_root->add_child(new_num_tile);
     return;
@@ -240,6 +245,9 @@ void Board::change_state_to(BoardState __new_state)
             /* Starts a delay timer to reset board to idle */
             m_to_idle_delay->start();
         }
+
+        check_if_player_lost();
+
         break;
     }
 
@@ -428,6 +436,56 @@ void Board::set_item_move_to_indx(const MatrixIndex &indx,
     } /* Else item should not be moved */
 
     return;
+}
+
+void Board::check_if_player_lost()
+{
+    bool is_player_lost = true;
+    for (auto &vec: m_board_mat) {
+        for (auto &tile: vec) {
+            if (tile == nullptr) {
+                /* Player is not lost yet. */
+                is_player_lost = false;
+                break;
+            } else if (can_tile_move(*tile)) {
+                is_player_lost = false;
+                break;
+            }
+        }
+    }
+
+    if (is_player_lost) {
+        Godot::print("Player is lost.");
+        auto player_lost = m_player_lost_scn->instance();
+        add_child(player_lost);
+        get_tree()->set_pause(true);
+    }
+    return;
+}
+
+bool Board::can_tile_move(const NumberTile &tile) const
+{
+    auto tile_indx = tile.get_mat_index();
+    
+    if (tile_indx.col < m_board_size.x - 1) {
+        const auto right_tile = m_board_mat[tile_indx.row][tile_indx.col + 1];
+        if (right_tile == nullptr) {
+            return true;
+        } else if (right_tile->get_number() == tile.get_number()) {
+            return true;
+        }
+    }
+
+    if (tile_indx.row < m_board_size.y - 1) {
+        const auto bottom_tile = m_board_mat[tile_indx.row + 1][tile_indx.col];
+        if (bottom_tile == nullptr) {
+            return true;
+        } else if (bottom_tile->get_number() == tile.get_number()) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Board::print_board_matrix() 
