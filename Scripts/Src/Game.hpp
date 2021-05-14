@@ -4,6 +4,8 @@
 #include <Node2D.hpp>
 #include <Godot.hpp>
 
+typedef unsigned int uint;
+
 namespace godot
 {
     class Label;
