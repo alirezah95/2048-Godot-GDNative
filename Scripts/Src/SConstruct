@@ -211,7 +211,7 @@ outputFile = outpath + 'lib2048-cpp.{}.{}.{}.{}'.format(
     env['platform'],
     env['target'],
     suffix,
-    'so'
+    'dll' if env['platform'] == 'windows' else 'so'
 )
 
 sources = []
