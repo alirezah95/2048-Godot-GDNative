@@ -50,7 +50,9 @@ namespace godot
 
         long get_number() const;
 
-        void set_index(const MatrixIndex &_index);
+        void set_mat_index(const MatrixIndex &_index);
+
+        MatrixIndex get_mat_index() const;
 
         void move_to_index(const MatrixIndex &_to_index,
                 Vector2 _target_position);

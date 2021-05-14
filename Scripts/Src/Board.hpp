@@ -38,6 +38,7 @@ namespace godot
         const float c_DRAG_THRESHOLD = 32. * 32.;
         Ref<PackedScene> m_bg_tile_scn;
         Ref<PackedScene> m_num_tile_scn;
+        Ref<PackedScene> m_player_lost_scn;
         Vector2 m_tile_start_pos;
         Vector2 m_board_size;
         vector<vector<NumberTile*>> m_board_mat;
@@ -70,6 +71,8 @@ namespace godot
         void swipe_left();
         void set_item_move_to_indx(const MatrixIndex &indx,
                 const MatrixIndex &to_indx);
+        void check_if_player_lost();
+        bool can_tile_move(const NumberTile &tile) const;
         void print_board_matrix(); /* For debug purposes. */
 
     public:

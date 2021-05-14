@@ -1,6 +1,23 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/NumberTile.gdns" type="Script" id=1]
+
+[sub_resource type="Animation" id=2]
+resource_name = "Create"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1e-05, 1e-05 ), Vector2( 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=1]
 resource_name = "Update"
@@ -23,6 +40,7 @@ tracks/0/keys = {
 margin_right = 40.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 128, 128 )
+rect_scale = Vector2( 1e-05, 1e-05 )
 rect_pivot_offset = Vector2( 64, 64 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -30,4 +48,6 @@ __meta__ = {
 }
 
 [node name="UpdateNumberAnima" type="AnimationPlayer" parent="."]
+autoplay = "Create"
+anims/Create = SubResource( 2 )
 anims/Update = SubResource( 1 )
